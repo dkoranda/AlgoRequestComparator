@@ -13,5 +13,6 @@ class Supply:
 
     def __repr__(self):
         return (f"Supply(supplyId={self.supplyId}, price={self.price}, "
-                f"availableAmount={self.availableAmount}, haircut={self.haircut})")
+                f"availableAmount={self.availableAmount}, availableQuantity={self.availableQuantity},"
+                f" productId={self.productId}, price={self.price}")
 

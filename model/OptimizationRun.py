@@ -1,6 +1,5 @@
 from model.Obligation import Obligation
 from model.Supply import Supply
-from model.PlacementCost import PlacementCost
 from model.EligibilityMatrix import EligibilityMatrix
 
 class OptimizationRun:
@@ -19,7 +18,7 @@ class OptimizationRun:
         
         # Parse the list of nested objects
         # Note: This assumes a simple structure for placements, see the class definition above.
-        self.eligibilityMatrix = [EligibilityMatrix(**p) for p in optimizationRun['eligibilityMatrix']]
+        self.eligibilityMatrix = {k: EligibilityMatrix(**p) for k,p in optimizationRun['eligibilityMatrix'].items()}
         
         
 

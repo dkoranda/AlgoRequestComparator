@@ -44,9 +44,17 @@ def validate_obligations_positionally(run1:OptimizationRun,run2:OptimizationRun)
             return -100
     for real_obl_key,real_obl_value in run1.real_index_obligation_dict.items():
         if (real_obl_value != run2.real_index_obligation_dict[real_obl_key]):
-            return -100
+            return -200
         
     return 0
+
+def validate_custom_constraint(run1:OptimizationRun,run2:OptimizationRun):
+    for cc_key,cc_value in run1.customConstraints.items():
+        if (cc_value != run2.customConstraints[cc_key]):
+            print(f"Custom constraint {cc_key} does not match between runs value from run1 is {run1.customConstraints[cc_key]} and run2 is {run2.customConstraints[cc_key]}")
+            return -1000
+    return 0
+
 
 data1 = json.load(open('./Jsons/ALGO_REQUEST_RUNID_32337.json', 'r'))
 run1 = OptimizationRun(data1)
@@ -68,3 +76,6 @@ create_position_dict(run2)
 
 positional_obligation_validaiton=validate_obligations_positionally(run1,run2)
 print(f"oblgiations validation status {positional_obligation_validaiton}")
+
+cc_validation_return_code = validate_custom_constraint(run1,run2)
+print(f"cc validation status {cc_validation_return_code}")

@@ -25,19 +25,25 @@ def check_all_sizes(run1:OptimizationRun,run2:OptimizationRun):
     return 0
 
 def create_position_dict(run:OptimizationRun):
-    run.synth_obligation_dict = {value.obligationId:position for position,value in enumerate(run.synthetic_obligations)}
-    run.real_obligation_dict = {value.obligationId:position for position,value in enumerate(run.real_obligations)}
-    run.supply_dict = {value.supplyId:position for position,value in enumerate(run.supplies)}
-    run.rev_synth_position_dict = {position:value.obligationId for position,value in enumerate(run.synthetic_obligations)}
-    run.rev_real_obligation_dict = {position:value.obligationId for position,value in enumerate(run.real_obligations)}
-    run.rev_supply_dict = {position:value.supplyId for position,value in enumerate(run.supplies)}
+    run.synth_obligation_id_dict = {value.obligationId:position for position,value in enumerate(run.synthetic_sorted_obligation)}
+    run.real_obligation_id_dict = {value.obligationId:position for position,value in enumerate(run.real_sorted_obligation)}
+    run.supply_id_dict = {value.supplyId:position for position,value in enumerate(run.sortedSupplies)}
+    run.rev_synth_obligation_id_dict = {position:value.obligationId for position,value in enumerate(run.synthetic_sorted_obligation)}
+    run.rev_real_obligation_id_dict = {position:value.obligationId for position,value in enumerate(run.real_sorted_obligation)}
+    run.rev_supply_id_dict = {position:value.supplyId for position,value in enumerate(run.sortedSupplies)}
+    run.synth_index_obligation_dict = {position:value for position,value in enumerate(run.synthetic_sorted_obligation)}
+    run.rev_real_obligation_id_dict = {position:value.obligationId for position,value in enumerate(run.real_sorted_obligation)}
+    run.real_index_obligation_dict = {position:value for position,value in enumerate(run.real_sorted_obligation)}
+    run.rev_supply_dict = {position:value.supplyId for position,value in enumerate(run.sortedSupplies)}
+    run.supply_index_dict = {position:value for position,value in enumerate(run.sortedSupplies)}
+
 
 def validate_obligations_positionally(run1:OptimizationRun,run2:OptimizationRun):
-    for synth_obl_key,synth_obl_value in run1.synth_obligation_dict.items():
-        if (synth_obl_key != run2.rev_synth_position_dict[synth_obl_value]):
+    for synth_obl_key,synth_obl_value in run1.synth_index_obligation_dict.items():
+        if (synth_obl_value != run2.synth_index_obligation_dict[synth_obl_key]):
             return -100
-    for real_obl_key,real_obl_value in run1.real_obligation_dict.items():
-        if (real_obl_key != run2.rev_real_obligation_dict[real_obl_value]):
+    for real_obl_key,real_obl_value in run1.real_index_obligation_dict.items():
+        if (real_obl_value != run2.real_index_obligation_dict[real_obl_key]):
             return -100
         
     return 0

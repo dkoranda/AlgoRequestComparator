@@ -16,3 +16,12 @@ class Supply:
                 f"availableAmount={self.availableAmount}, availableQuantity={self.availableQuantity},"
                 f" productId={self.productId}, price={self.price}")
 
+    def __eq__(self, other):
+        if not isinstance(other, Supply):
+            return False
+        
+        # Compare all properties except 'last_modified'
+        return (self.availableAmount == other.availableAmount and
+                self.availableQuantity == other.availableQuantity and
+                self.price == other.price
+                and self.productId == other.productId)

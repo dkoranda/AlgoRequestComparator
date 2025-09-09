@@ -9,10 +9,16 @@ class OptimizationRun:
     def __init__(self, optimizationRun):
         self.algorithmName = optimizationRun['algorithmName']
         self.optimizationRunId = optimizationRun['optimizationRunId']
-        
+        self.synthetic_obligations = []
+        self.real_obligations = []
         # Parse the dictionaries of nested objects
-        self.obligations = {Obligation(**v) for k, v in optimizationRun['obligations'].items()}
-        self.supplies = {Supply(**v) for k, v in optimizationRun['supplies'].items()}
+        for key,value in optimizationRun['obligations'].items():
+            if int(key) < 0:
+                self.synthetic_obligations.append(Obligation(**value))
+            elif int(key) > 0:
+                self.real_obligations.append(Obligation(**value))
+        self.obligations = [Obligation(**v) for k, v in optimizationRun['obligations'].items()]
+        self.supplies = [Supply(**v) for k, v in optimizationRun['supplies'].items()]
         self.customConstraints = optimizationRun['customConstraints']
         self.optimizationAlgorithmMap =  optimizationRun['optimizationAlgorithmMap']
         

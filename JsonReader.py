@@ -69,13 +69,16 @@ sort_suplies(run1)
 sort_obligations(run2)
 sort_suplies(run2)
 size_validation_return_code = check_all_sizes(run1,run2)
-print(f"size validation status {size_validation_return_code}")
+if(size_validation_return_code != 0):
+    raise ValueError("Size validation failed")
 
 create_position_dict(run1)
 create_position_dict(run2)
 
 positional_obligation_validaiton=validate_obligations_positionally(run1,run2)
-print(f"oblgiations validation status {positional_obligation_validaiton}")
+if(positional_obligation_validaiton != 0):
+    raise ValueError("oblgiations validation failed")
 
 cc_validation_return_code = validate_custom_constraint(run1,run2)
-print(f"cc validation status {cc_validation_return_code}")
+if(cc_validation_return_code != 0):
+    raise ValueError("Custom constraint validation failed")

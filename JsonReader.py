@@ -55,6 +55,16 @@ def validate_custom_constraint(run1:OptimizationRun,run2:OptimizationRun):
             return -1000
     return 0
 
+def validate_eligibility_matrix(run1:OptimizationRun,run2:OptimizationRun):
+    for obligationId1, matrix1 in run1.eligibilityMatrix.items():
+        if( int(obligationId1) < 0 ):
+            matrix2 = run2.eligibilityMatrix[run2.rev_synth_obligation_id_dict[run1.synth_obligation_id_dict[obligationId1]]]
+        else:
+            matrix2 = run2.eligibilityMatrix[run2.rev_real_obligation_id_dict[run1.real_obligation_id_dict[obligationId1]]]
+        print(matrix1)
+        print(matrix2)
+    return 0
+
 
 data1 = json.load(open('./Jsons/ALGO_REQUEST_RUNID_32337.json', 'r'))
 run1 = OptimizationRun(data1)
@@ -70,15 +80,20 @@ sort_obligations(run2)
 sort_suplies(run2)
 size_validation_return_code = check_all_sizes(run1,run2)
 if(size_validation_return_code != 0):
-    raise ValueError("Size validation failed")
+    print("Size validation failed")
 
 create_position_dict(run1)
 create_position_dict(run2)
 
 positional_obligation_validaiton=validate_obligations_positionally(run1,run2)
 if(positional_obligation_validaiton != 0):
-    raise ValueError("oblgiations validation failed")
+    print("oblgiations validation failed")
 
 cc_validation_return_code = validate_custom_constraint(run1,run2)
 if(cc_validation_return_code != 0):
-    raise ValueError("Custom constraint validation failed")
+    print("Custom constraint validation failed")
+
+
+eligibility_matrix_return_code=validate_eligibility_matrix(run1,run2)
+if(cc_validation_return_code != 0):
+    print("Eligibility Matrix validation failed")

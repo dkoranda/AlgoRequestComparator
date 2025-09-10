@@ -1,13 +1,6 @@
 import json
-from model.OptimizationRun import OptimizationRun
+from model import OptimizationRun
 
-def sort_obligations(optimizationRun):
-    optimizationRun.synthetic_sorted_obligation = sorted(optimizationRun.synthetic_obligations,key=lambda x: (x.obligationAmount,x.obligationId))
-    optimizationRun.real_sorted_obligation = sorted(optimizationRun.real_obligations,key=lambda x: (x.obligationAmount,x.obligationId))
-
-
-def sort_suplies(optimizationRun):
-    optimizationRun.sortedSupplies = sorted(optimizationRun.supplies,key=lambda x: (x.availableAmount,x.availableQuantity,x.productId))
 
 def check_all_sizes(run1:OptimizationRun,run2:OptimizationRun):
     if(len(run1.obligations) != len(run2.obligations)):
@@ -23,20 +16,6 @@ def check_all_sizes(run1:OptimizationRun,run2:OptimizationRun):
         print(f"Run1 has {len(run1.supplies)} and run2 has {len(run2.supplies)} supplies")
         return -20
     return 0
-
-def create_position_dict(run:OptimizationRun):
-    run.synth_obligation_id_dict = {value.obligationId:position for position,value in enumerate(run.synthetic_sorted_obligation)}
-    run.real_obligation_id_dict = {value.obligationId:position for position,value in enumerate(run.real_sorted_obligation)}
-    run.supply_id_dict = {value.supplyId:position for position,value in enumerate(run.sortedSupplies)}
-    run.rev_synth_obligation_id_dict = {position:value.obligationId for position,value in enumerate(run.synthetic_sorted_obligation)}
-    run.rev_real_obligation_id_dict = {position:value.obligationId for position,value in enumerate(run.real_sorted_obligation)}
-    run.rev_supply_id_dict = {position:value.supplyId for position,value in enumerate(run.sortedSupplies)}
-    run.synth_index_obligation_dict = {position:value for position,value in enumerate(run.synthetic_sorted_obligation)}
-    run.rev_real_obligation_id_dict = {position:value.obligationId for position,value in enumerate(run.real_sorted_obligation)}
-    run.real_index_obligation_dict = {position:value for position,value in enumerate(run.real_sorted_obligation)}
-    run.rev_supply_dict = {position:value.supplyId for position,value in enumerate(run.sortedSupplies)}
-    run.supply_index_dict = {position:value for position,value in enumerate(run.sortedSupplies)}
-
 
 def validate_obligations_positionally(run1:OptimizationRun,run2:OptimizationRun):
     for synth_obl_key,synth_obl_value in run1.synth_index_obligation_dict.items():
@@ -72,28 +51,31 @@ run1 = OptimizationRun(data1)
 data2 = json.load(open('./Jsons/ALGO_REQUEST_RUNID_32464.json', 'r'))
 run2 = OptimizationRun(data2)
 
+run1.sort_obligations()
+run1.sort_suplies()
 
-sort_obligations(run1)
-sort_suplies(run1)
-
-sort_obligations(run2)
-sort_suplies(run2)
+run2.sort_obligations()
+run2.sort_suplies()
 size_validation_return_code = check_all_sizes(run1,run2)
+
 if(size_validation_return_code != 0):
     print("Size validation failed")
 
-create_position_dict(run1)
-create_position_dict(run2)
+run1.create_position_dict()
+run2.create_position_dict()
 
 positional_obligation_validaiton=validate_obligations_positionally(run1,run2)
+
 if(positional_obligation_validaiton != 0):
     print("oblgiations validation failed")
 
 cc_validation_return_code = validate_custom_constraint(run1,run2)
+
 if(cc_validation_return_code != 0):
     print("Custom constraint validation failed")
 
 
 eligibility_matrix_return_code=validate_eligibility_matrix(run1,run2)
+
 if(cc_validation_return_code != 0):
     print("Eligibility Matrix validation failed")

@@ -33,3 +33,23 @@ class OptimizationRun:
                 f"num_obligations={len(self.obligations)}, "
                 f"num_supplies={len(self.supplies)})")
 
+    def sort_obligations(self):
+        self.synthetic_sorted_obligation = sorted(self.synthetic_obligations,key=lambda x: (x.obligationAmount,x.obligationId))
+        self.real_sorted_obligation = sorted(self.real_obligations,key=lambda x: (x.obligationAmount,x.obligationId))
+
+    def sort_suplies(self):
+        self.sortedSupplies = sorted(self.supplies,key=lambda x: (x.availableAmount,x.availableQuantity,x.productId))
+
+    def create_position_dict(self):
+        self.synth_obligation_id_dict = {value.obligationId:position for position,value in enumerate(self.synthetic_sorted_obligation)}
+        self.real_obligation_id_dict = {value.obligationId:position for position,value in enumerate(self.real_sorted_obligation)}
+        self.supply_id_dict = {value.supplyId:position for position,value in enumerate(self.sortedSupplies)}
+        self.rev_synth_obligation_id_dict = {position:value.obligationId for position,value in enumerate(self.synthetic_sorted_obligation)}
+        self.rev_real_obligation_id_dict = {position:value.obligationId for position,value in enumerate(self.real_sorted_obligation)}
+        self.rev_supply_id_dict = {position:value.supplyId for position,value in enumerate(self.sortedSupplies)}
+        self.synth_index_obligation_dict = {position:value for position,value in enumerate(self.synthetic_sorted_obligation)}
+        self.rev_real_obligation_id_dict = {position:value.obligationId for position,value in enumerate(self.real_sorted_obligation)}
+        self.real_index_obligation_dict = {position:value for position,value in enumerate(self.real_sorted_obligation)}
+        self.rev_supply_dict = {position:value.supplyId for position,value in enumerate(self.sortedSupplies)}
+        self.supply_index_dict = {position:value for position,value in enumerate(self.sortedSupplies)}
+

@@ -19,3 +19,24 @@ class EligibilityMatrixElement:
         self.pureDerivedSupply = pureDerivedSupply
         self.obligationKey = obligationKey
         self.placementCost = [PlacementCost(**c) for c in placementCost]
+
+    def __eq__(self, other):
+        if not isinstance(other, EligibilityMatrixElement):
+            return False
+            # Compare all properties except 'last_modified'
+        return (self.haircut == other.haircut
+                and self.withdrawalHaircut == other.withdrawalHaircut
+                #and self.concentration == other.concentration
+                #and self.placementCost == other.placementCost
+                and self.minimumAllocation == other.minimumAllocation
+                and self.price == other.price
+                and self.availableAmount == other.availableAmount
+                and self.numberOfMovements == other.numberOfMovements
+                and self.allocationType == other.allocationType
+                and self.derivedSupplySources == other.derivedSupplySources
+                and self.pureDerivedSupply == other.pureDerivedSupply
+                and self.obligationKey == other.obligationKey)
+
+
+
+

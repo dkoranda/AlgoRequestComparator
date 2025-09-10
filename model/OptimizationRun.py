@@ -25,6 +25,9 @@ class OptimizationRun:
         # Parse the list of nested objects
         # Note: This assumes a simple structure for placements, see the class definition above.
         self.eligibilityMatrix = {k: { x: EligibilityMatrixElement(**y) for x,y in p.items()} for k,p in optimizationRun['eligibilityMatrix'].items()}
+        self.sort_obligations()
+        self.sort_suplies()
+        self.create_position_dict()
         
         
 

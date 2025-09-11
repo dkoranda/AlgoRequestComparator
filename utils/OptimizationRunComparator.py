@@ -57,7 +57,6 @@ class OptimizationRunComparator:
         supply_ids_dict = {supplyId1:self.run2.rev_supply_id_dict[position] for  supplyId1,position in self.run1.supply_id_dict.items()}
 
         for obligationId1, matrix1 in self.run1.eligibilityMatrix.items():
-            matrix2 = None
             if( int(obligationId1) < 0 ):
                 matrix2 = self.run2.eligibilityMatrix[str(synth_obligation_ids_dict[int(obligationId1)])]
             else:
@@ -78,7 +77,6 @@ class OptimizationRunComparator:
         real_obligation_ids_dict2 = {obligationId1:self.run1.rev_real_obligation_id_dict[position] for  obligationId1,position in self.run2.real_obligation_id_dict.items()}
 
         for obligationId2, matrix2 in self.run2.eligibilityMatrix.items():
-            matrix1 = None
             if( int(obligationId2) < 0 ):
                 matrix1 = self.run1.eligibilityMatrix[str(synth_obligation_ids_dict2[int(obligationId2)])]
             else:
@@ -86,9 +84,5 @@ class OptimizationRunComparator:
 
             if(matrix1 is None):
                 print(f" {obligationId2} from run2 has an eligibility matrix but {synth_obligation_ids_dict2[obligationId2]} has no eligibility matrix in run1")
-
-
-        supply_ids_dict2 = {supplyId1:self.run1.rev_supply_id_dict[position] for  supplyId1,position in self.run2.supply_id_dict.items()}
-
 
         return 0

@@ -1,11 +1,12 @@
 import json
 from model import OptimizationRun
 from utils import OptimizationRunComparator
+import sys
 
-data1 = json.load(open('./Jsons/ALGO_REQUEST_RUNID_32337.json', 'r'))
+data1 = json.load(open(sys.argv[1], 'r'))
 run1 = OptimizationRun(data1)
 
-data2 = json.load(open('./Jsons/ALGO_REQUEST_RUNID_32464.json', 'r'))
+data2 = json.load(open(sys.argv[2] , 'r'))
 run2 = OptimizationRun(data2)
 
 

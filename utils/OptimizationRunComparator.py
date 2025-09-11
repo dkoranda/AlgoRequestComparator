@@ -46,6 +46,16 @@ class OptimizationRunComparator:
 
     def validate_custom_constraint(self):
         for cc_key,cc_value in self.run1.customConstraints.items():
+            if (self.run2.customConstraints[cc_key] == None):
+                print(f"Custom constraint {cc_key} does exists in run1 but not in run2")
+                return -1000
+
+        for cc_key,cc_value in self.run2.customConstraints.items():
+            if (self.run1.customConstraints[cc_key] == None):
+                print(f"Custom constraint {cc_key} does exists in run2 but not in run1")
+                return -1000
+
+        for cc_key,cc_value in self.run1.customConstraints.items():
             if (cc_value != self.run2.customConstraints[cc_key]):
                 print(f"Custom constraint {cc_key} does not match between runs value from run1 is {self.run1.customConstraints[cc_key]} and run2 is {self.run2.customConstraints[cc_key]}")
                 return -1000
@@ -64,14 +74,18 @@ class OptimizationRunComparator:
 
             if(matrix2 is None):
                 print(f" {obligationId1} from run1 has an eligibility matrix but {synth_obligation_ids_dict[obligationId1]} has no eligibility matrix in run2")
+                return -2000;
+
             if( int(obligationId1) > 0 ):
                 for supplyId1 , matrixElement1 in matrix1.items():
                     matrixElement2 = matrix2.get(str(supply_ids_dict[int(supplyId1)]))
                     if(matrixElement2 is None):
                         print(f" matrix element for {obligationId1} X {supplyId1} from run1 does not have a mathing element for {synth_obligation_ids_dict[int(obligationId1)]} X {supply_ids_dict[int(supplyId1)]}")
+                        return -2000;
                     else:
                         if (matrixElement1 != matrixElement2):
                             print(f" matrix element from run1 for {matrixElement1.obligationId} X {matrixElement1.supplyId} is not matching with run2 for {matrixElement2.obligationId} X {matrixElement2.supplyId}")
+                            return -2000;
 
         synth_obligation_ids_dict2 = {obligationId1:self.run1.rev_synth_obligation_id_dict[position] for  obligationId1,position in self.run2.synth_obligation_id_dict.items()}
         real_obligation_ids_dict2 = {obligationId1:self.run1.rev_real_obligation_id_dict[position] for  obligationId1,position in self.run2.real_obligation_id_dict.items()}
@@ -84,5 +98,6 @@ class OptimizationRunComparator:
 
             if(matrix1 is None):
                 print(f" {obligationId2} from run2 has an eligibility matrix but {synth_obligation_ids_dict2[obligationId2]} has no eligibility matrix in run1")
+                return -2000;
 
         return 0
